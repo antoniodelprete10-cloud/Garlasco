@@ -1,0 +1,337 @@
+<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La casa del delitto di Chiara Poggi</title><style>
+*{box-sizing:border-box}body{margin:0;background:white;color:#151515;font:14px Arial}main{max-width:1400px;margin:auto;padding:26px}small{color:#059ade;font-weight:bold;letter-spacing:.1em}h1{font:48px/1.1 Georgia;margin:14px 0}header p{font:18px/1.4 Georgia;color:#666;max-width:720px}.bar{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}button,select{font:700 12px Arial;border:1px solid #ccc;background:white;padding:12px;cursor:pointer;color:#222;border-radius:0}button[aria-pressed=true],button.active{background:#059ade;color:white;border-color:#059ade}button:focus-visible{outline:3px solid #a4d1f4}.stage{position:relative;height:min(70vh,760px);min-height:480px;background:linear-gradient(#f7f5f1,#fff);overflow:hidden}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}#labels{position:absolute;inset:0;pointer-events:none}.pin{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;background:white;border:2px solid #555;font-size:13px}.pin.active{background:#059ade;border-color:#059ade;color:white}.popup{position:absolute;width:300px;background:#fff;padding:20px;z-index:20;border-left:3px solid #059ade;box-shadow:0 4px 28px #0002}.popup h2{font:25px Georgia;margin:8px 20px 12px 0}.popup p{font:17px/1.45 Georgia;margin:0}.popup small{font-size:10px}.close{position:absolute;right:4px;top:3px;border:0;padding:8px;font-size:18px}.roomtag{position:absolute;transform:translate(-50%,-50%);font-size:10px;font-weight:bold;letter-spacing:.07em;text-transform:uppercase;color:#38302b;background:#ffffffe0;padding:4px 6px;white-space:nowrap}.hint{position:absolute;bottom:14px;left:16px;max-width:calc(100% - 32px);background:#ffffffdf;padding:8px;font-size:11px;color:#555;pointer-events:none}.footer{font:12px/1.5 Arial;color:#777;margin-top:15px;max-width:950px}.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.nav span{margin:0 8px;color:#666;font-size:12px}#original{display:none;position:absolute;inset:0;background:white}#original select{position:absolute;top:12px;left:12px;z-index:1}#back3d{position:absolute;top:12px;right:12px;z-index:1}#original img{width:100%;height:100%;object-fit:contain}.viewlabel{position:absolute;top:14px;left:16px;font-size:11px;color:#666;background:#fffd;padding:7px}.popup[hidden]{display:none}@media(max-width:600px){main{padding:18px 12px}h1{font-size:36px}.stage{height:65vh;min-height:470px}.bar button{font-size:11px;padding:10px}.popup{width:260px;padding:16px}.popup h2{font-size:22px}.popup p{font-size:16px}}
+.popup{position:relative;width:100%;padding:18px 40px 18px 20px;margin:12px 0 0;box-shadow:none;background:#f7f7f5;min-height:135px}.popup h2{font-size:24px;margin:5px 0 8px}.popup p{font-size:17px;max-width:1000px}.popup .close{right:8px;top:8px}.pin{width:22px;height:22px;font-size:10px;border-width:1px;background:#fffffff0}.pin.evidence-pin{width:23px;height:23px;color:#555;border-color:#888}.pin.evidence-pin.active{background:#059ade;color:white}.roomtag{display:none}.viewlabel,.hint{display:none}.refbar{display:none;gap:10px;align-items:center;margin:10px 0}.refbar #referenceChoice,.refbar #back3d{position:static}.evidence-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.evidence-controls button{padding:8px 10px;text-align:left;font-weight:400;font-size:12px}.evidence-controls button.active{font-weight:bold}.proofnote,.route-note{font:12px/1.5 Arial;color:#6c6c6c;margin:10px 0}.stage{isolation:isolate;height:min(58vh,580px);min-height:430px}#original{pointer-events:none}#original img{padding:4px}.stage canvas{outline:none}@media(max-width:600px){.popup{width:100%;padding:16px 38px 16px 16px}.popup h2{font-size:22px}.popup p{font-size:16px}.evidence-controls button{flex:1 1 45%}.refbar{flex-wrap:wrap}.stage{min-height:430px}}
+.popup p:empty,.popup small:empty{display:none}
+.stage .popup{position:absolute;z-index:30;width:300px;max-width:38%;min-height:0;max-height:46%;overflow:auto;margin:0;padding:14px 32px 14px 16px;background:#fffffff5;box-shadow:0 3px 20px #0002;overscroll-behavior:contain;cursor:auto}
+.stage .popup h2{font-size:21px;line-height:1.15;margin:5px 0 8px}.stage .popup p{font-size:15px;line-height:1.35}.stage .popup small{letter-spacing:.03em;line-height:1.3;display:block;padding-right:8px}.stage .popup .close{right:2px;top:2px}
+@media(max-width:600px){.stage .popup{max-width:48%;width:260px;max-height:43%;padding:11px 26px 11px 11px}.stage .popup h2{font-size:17px}.stage .popup p{font-size:13px;line-height:1.3}.stage .popup small{font-size:9px}.stage .popup .close{padding:4px}}
+</style><main><header><small>RADAR / QN · GARLASCO</small><h1>La casa del delitto di Chiara Poggi</h1></header><div class="bar"><button id="a" aria-pressed="true">La tesi del primo procedimento</button><button id="b" aria-pressed="false">L’ipotesi della seconda inchiesta</button></div><div class="bar"><button id="home">Casa intera</button><button id="exterior" aria-pressed="false">Esterno 3D</button><select id="rooms" aria-label="Entra in un ambiente"><option value="">Entra in un ambiente</option></select><button id="in" aria-label="Avvicina">+</button><button id="out" aria-label="Allontana">−</button><button id="walls" aria-pressed="false">Alza le pareti</button><button id="pathsToggle" aria-pressed="true">Nascondi percorsi</button><button id="evidenceToggle" aria-pressed="false">Mostra elementi di prova</button></div><section class="stage"><canvas id="canvas" aria-label="Modello tridimensionale navigabile della casa" tabindex="0"></canvas><div id="labels"></div><span class="viewlabel">Ricostruzione 3D schematica</span><div class="popup" role="region" aria-label="Dettaglio della tappa" hidden><button class="close" aria-label="Chiudi etichetta">×</button><small id="popstep"></small><h2 id="poptitle"></h2><p id="poptext"></p></div></section><div class="bar nav"><button id="prev">← Tappa precedente</button><span id="progress">1a / 4a</span><button id="next">Tappa successiva →</button><button id="play">Avvia la ricostruzione 3d</button></div><div class="evidence-controls" aria-label="Rilievi e reperti dell’infografica"></div></main><script>
+const DATA={"a": [["La porta aperta", "L’assassino entra senza effrazione: per i giudici è una persona conosciuta da Chiara, che alle 9.12 ha disinserito l’allarme", 24, 79], ["Aggressione", "Chiara viene colpita più volte all’interno dell’abitazione", 33, 70], ["Verso la cantina", "La vittima viene trascinata nell’area della scala che porta al seminterrato", 47, 50], ["Spinta sulle scale", "Chiara precipita o viene spinta sulle scale", 21, 8]], "b": [["L’ingresso nascosto", "La nuova pista ipotizza uno scenario diverso: Chiara potrebbe essere stata sorpresa in casa da qualcuno entrato senza essere accolto alla porta", 28, 73], ["La colluttazione", "La vittima rifiuta un approccio sessuale, quindi viene aggredita e tenta di difendersi", 36, 68], ["Trascinamento", "Chiara viene trascinata verso la porta della cantina", 50, 50], ["Scala della cantina", "La vittima scivola o viene spinta lungo le scale, l’aggressore infierisce sul corpo", 19, 12]], "nota_geometria": "Modello corretto sulla planimetria aggiuntiva: cucina a sinistra, sala a destra, ingresso frontale centrale, scala superiore centrale, bagno posteriore destro, garage posteriore sinistro, seminterrato integrato con porta a soffietto."};
+const $=s=>document.querySelector(s),canvas=$('#canvas'),ctx=canvas.getContext('2d'),stage=$('.stage'),labels=$('#labels'),popup=$('.popup');
+let firstPerson=false,fpEye=[0,1.55,4.45],fpLook=[0,1,2],fpYawOffset=0,fpPitchOffset=0,fpZoom=1;
+let outside=false,currentRoom='interno';
+let W=1000,H=650,mode='a',step=0,selected=null,raise=false,reference=false,timer=null;
+let yaw=-.58,pitch=.66,dist=18,target=[0,0,-.2],desired=null;
+const meshes=[], roomList=[['Sala',[2.3,.4,2.4]],['Cucina',[-2.8,.5,1.5]],['Scale al piano superiore',[-.9,.8,.8]],['Bagno',[2.1,.6,-2]],['Garage',[-2.5,.5,-4]],['Accesso al seminterrato',[-1.35,.4,-1.8]],['Scala del seminterrato',[-2.9,-.6,-2.15]]];
+const points={a:[[0,.2,4.5],[.05,.25,1.3],[-1.35,.3,-1.7],[-2.8,-.65,-2.1]],b:[[0,.25,4.15],[.1,.25,1.7],[-1.35,.3,-1.7],[-2.8,-.65,-2.1]]};
+
+// Continuous centreline follows the source arrow through the hallway and folding doorway.
+// It never shortcuts through the upper staircase or the walls of the basement recess.
+const BASEMENT_PATH=[[-1.5,0.06,-2.12],[-1.85,-0.19,-2.12],[-2.2,-0.44,-2.12],[-2.485,-0.69,-2.0436],[-2.6936,-0.94,-1.835],[-2.77,-1.19,-1.55],[-2.77,-1.44,-1.39],[-2.77,-1.69,-1.23],[-2.6936,-1.94,-0.945],[-2.485,-2.19,-0.7364],[-2.2,-2.44,-0.66],[-1.6833,-2.69,-0.66],[-1.1667,-2.94,-0.66],[-0.65,-3.17,-0.66]];
+const ROUTE=[[0,0.06,4.45],[0.08,0.06,3.7],[0.2,0.06,2.8],[0.22,0.06,1.65],[0.24,0.06,0.65],[0.62,0.06,-0.55],[0.62,0.06,-1.6],[-0.7,0.06,-2.1],[-1.5,0.06,-2.12],[-1.85,-0.19,-2.12],[-2.2,-0.44,-2.12],[-2.485,-0.69,-2.0436],[-2.6936,-0.94,-1.835],[-2.77,-1.19,-1.55],[-2.77,-1.44,-1.39],[-2.77,-1.69,-1.23],[-2.6936,-1.94,-0.945],[-2.485,-2.19,-0.7364],[-2.2,-2.44,-0.66],[-1.6833,-2.69,-0.66],[-1.1667,-2.94,-0.66],[-0.65,-3.17,-0.66]];
+const STEP_NODES=[0,3,8,21],STEP_PROOFS=[[0],[1,7],[2,3,4],[6,8,9]];
+const EVIDENCE=[{"id": "E1", "title": "La porta d’ingresso", "where": "", "pos": [0.47, 0.8, 4.45], "kind": "print", "text": "Sull’interno del portone d’ingresso è presente l’impronta numero 10 che, nel 2020, i carabinieri del nucleo investigativo di Milano segnalarono come probabile traccia dell’assassino durante l’uscita da casa Poggi. Sarà oggetto di incidente probatorio"}, {"id": "E2", "title": "Gocce di sangue vicino al divano", "where": "", "pos": [0.83, 0.025, 1.68], "kind": "blood", "text": ""}, {"id": "E3", "title": "Segno di un corpo trascinato", "where": "", "pos": [0.18, 0.025, -0.2], "kind": "drag", "text": ""}, {"id": "E4", "title": "Sangue sul primo gradino della scala che porta al piano superiore", "where": "", "pos": [-0.95, 0.17, 2.02], "kind": "blood", "text": ""}, {"id": "E5", "title": "Telefono fisso", "where": "", "pos": [-0.2, 0.85, -0.84], "kind": "blood", "text": "Schizzi di sangue"}, {"id": "E6", "title": "Tracce di sangue sul tappeto e un’impronta digitale di Stasi", "where": "", "pos": [2.38, 0.92, -2.62], "kind": "print", "text": ""}, {"id": "E7", "title": "Impronta attribuita a Sempio", "where": "", "pos": [-2.38, 0.34, -2.94], "kind": "print", "text": "Per la prima indagine dei Ris l’impronta rinvenuta nel quarto gradino in alto sulle scale non era attribuibile. Per la Procura di Pavia che ha riaperto l’inchiesta appartiene invece ad Andrea Sempio"}, {"id": "E8", "title": "Vistosa macchia di sangue", "where": "", "pos": [-0.12, 0.025, 1.02], "kind": "blood", "text": ""}, {"id": "E9", "title": "Ciocche di capelli", "where": "", "pos": [-2.2, -2.44, -0.66], "kind": "hair", "text": ""}, {"id": "E10", "title": "Corpo di Chiara Poggi", "where": "", "pos": [-2.485, -2.19, -0.7364], "kind": "location", "text": ""}, {"id": "E11", "title": "Sette impronte sospette di scarpe da uomo", "where": "", "pos": null, "kind": "unlocated", "text": ""}];
+let evidenceVisible=false,activeEvidence=null,routeProgress=0,routeVisible=true,playing=false,routeMotion=null,motionSerial=0;
+const lengths=[0];for(let i=1;i<ROUTE.length;i++)lengths.push(lengths[i-1]+Math.hypot(...ROUTE[i].map((v,k)=>v-ROUTE[i-1][k])));
+const routeTotal=lengths[lengths.length-1],stepProgress=STEP_NODES.map(i=>lengths[i]/routeTotal);
+function routePoint(t){let d=Math.max(0,Math.min(1,t))*routeTotal;for(let i=1;i<lengths.length;i++){if(d<=lengths[i]){let u=(d-lengths[i-1])/(lengths[i]-lengths[i-1]);return ROUTE[i-1].map((v,k)=>v+(ROUTE[i][k]-v)*u)}}return ROUTE.at(-1).slice()}
+// Test route samples against the rendered surfaces so lower-floor paths cannot bleed through floors or furniture.
+let routeOccluders=[];
+function routeSampleVisible(point){
+ const p=project(point);if(p.z<.07)return false;
+ for(const o of routeOccluders){
+  if(p.x<o.minX||p.x>o.maxX||p.y<o.minY||p.y>o.maxY)continue;
+  const a=o.v[0];for(let i=1;i<o.v.length-1;i++){
+   const b=o.v[i],c=o.v[i+1],d=(b.y-c.y)*(a.x-c.x)+(c.x-b.x)*(a.y-c.y);if(Math.abs(d)<1e-8)continue;
+   const u=((b.y-c.y)*(p.x-c.x)+(c.x-b.x)*(p.y-c.y))/d,v=((c.y-a.y)*(p.x-c.x)+(a.x-c.x)*(p.y-c.y))/d,w=1-u-v;
+   if(u<0||v<0||w<0)continue;
+   const z=1/(u/a.z+v/b.z+w/c.z);if(z<p.z-.045)return false;
+  }
+ }return true;
+}
+function routeSegments(start,end){const parts=[],count=Math.max(1,Math.ceil((end-start)*routeTotal/.045));for(let i=0;i<count;i++){const a=routePoint(start+(end-start)*i/count),b=routePoint(start+(end-start)*(i+1)/count),mid=a.map((v,k)=>(v+b[k])/2);if(routeSampleVisible(a)&&routeSampleVisible(mid)&&routeSampleVisible(b))parts.push([project(a),project(b)])}return parts}
+function routeArrow(t,size){const point=routePoint(t);if(!routeSampleVisible(point))return;const a=project(routePoint(Math.max(0,t-.003))),b=project(point);if(a.z<.07)return;const ang=Math.atan2(b.y-a.y,b.x-a.x);ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(b.x-size*Math.cos(ang-.5),b.y-size*Math.sin(ang-.5));ctx.lineTo(b.x-size*Math.cos(ang+.5),b.y-size*Math.sin(ang+.5));ctx.closePath();ctx.fillStyle='#059ade';ctx.fill()}
+function drawRoute(){if(outside||reference||!routeVisible)return;if(firstPerson){drawIndoorRoute();return}ctx.save();ctx.lineWidth=3.5;ctx.strokeStyle='#059ade';ctx.setLineDash([7,4]);ctx.beginPath();for(const [a,b] of routeSegments(0,1)){ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}ctx.stroke();ctx.setLineDash([]);for(const t of [.2,.48,.68,.86])routeArrow(t,8);const point=routePoint(routeProgress);if(routeSampleVisible(point)){const p=project(point);ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fillStyle='#059ade';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()}ctx.restore()}
+function drawProofs(){if(outside||reference||!evidenceVisible)return;ctx.save();EVIDENCE.forEach((e,i)=>{if(!e.pos)return;let p=project(e.pos);if(p.z<.2)return;if(e.kind==='blood'||e.kind==='drag'){ctx.fillStyle='#9b5140aa';let n=e.kind==='drag'?9:4;for(let j=0;j<n;j++){let q=project([e.pos[0]+(e.kind==='drag'?Math.sin(j)*.05:Math.cos(j*2)*.07),e.pos[1],e.pos[2]+(e.kind==='drag'?j*.075:Math.sin(j*2)*.07)]);ctx.beginPath();ctx.ellipse(q.x,q.y,e.kind==='drag'?2.5:2,1.5,0,0,Math.PI*2);ctx.fill()}}else{ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=i===activeEvidence?'#059ade':'#6c6255';ctx.fill()}});ctx.restore()}
+
+function face(v,c){meshes.push({v,c})}function box(x,y,z,w,h,d,c){let a=[x,y,z],b=[x+w,y,z],c1=[x+w,y,z+d],e=[x,y,z+d],A=[x,y+h,z],B=[x+w,y+h,z],C=[x+w,y+h,z+d],E=[x,y+h,z+d];face([a,b,B,A],c);face([b,c1,C,B],c);face([c1,e,E,C],c);face([e,a,A,E],c);face([A,B,C,E],c)}
+function build(){meshes.length=0;
+const wh=raise||firstPerson?2.3:.72;
+// Coordinate frame: entrance on front (z+), kitchen left, living room right.
+// Floor opening at the basement stairwell, integrated into the house.
+photoFloor();
+// Exterior and entrance opening.
+box(-4,0,-5,8,2.4,.14,'#e5d9c8');box(3.86,0,-5,.14,2.4,9.5,'#e7ddcd');box(-4,0,-5,.14,(raise||firstPerson)?2.4:.4,9.5,'#e0d2bd');
+box(-4,0,4.4,3.45,firstPerson?2.4:raise?1.1:.18,.14,'#e6daca');box(.55,0,4.4,3.45,firstPerson?2.4:raise?1.1:.18,.14,'#e6daca');
+box(-.58,0,4.4,.12,2.1,.14,'#a06b36');box(.48,0,4.4,.12,2.1,.14,'#a06b36');box(-.58,2.05,4.4,1.18,.12,.14,'#a06b36');
+// Garage occupies rear left, behind basement access.
+box(-4,0,-3.1,2.6,wh,.13,'#e5d8c3');box(-1.5,0,-5,.13,wh,1.9,'#e5d8c3');garageFinishes();
+// Bathroom at rear right, opening onto central passage; no bedroom on this plan.
+box(1,0,-3.1,2.85,wh,.13,'#e9dece');box(1,0,-3.1,.13,wh,1.1,'#e9dece');box(1,0,-1.35,2.85,wh,.13,'#e9dece');
+box(1.14,.015,-2.95,2.6,.025,1.5,'#d8c4a7');box(1.45,0,-2.88,1.1,.8,.5,'#bda78a');box(1.4,.8,-2.9,1.2,.08,.58,'#f6f2e8');box(1.8,.89,-2.8,.42,.04,.3,'#deddd4');box(1.45,1.15,-2.98,1.1,.9,.04,'#9fa9a6');box(3,0,-2.2,.45,.48,.6,'#eeebe4');
+// Kitchen on left, along side wall; passage near entrance.
+box(-1.55,0,2.6,.13,wh,1.8,'#e9dece');box(-4,0,-1,2.05,wh,.13,'#e9dece');
+box(-3.85,0,-.65,.65,.86,3.8,'#95683f');box(-3.87,.86,-.65,.75,.08,3.8,'#e8d5b5');box(-3.85,1.35,-.4,.4,.65,2.9,'#9a7148');box(-3.72,.95,.2,.47,.025,.55,'#9d9e9a');box(-3.72,.95,1.7,.47,.03,.6,'#34322e');
+// Upper staircase at centre-left: starts near entrance and rises towards rear.
+for(let i=0;i<10;i++)box(-1.45,i*.16,1.9-i*.25,.9,.16,.25,'#a8734e');
+box(-1.58,0,-.45,.09,wh,2.6,'#e0d2bd');
+// Basement recess, accessible from hall through folding door on its right.
+box(-4,-3.29,-3,2.5,.12,2,'#b8afa1');meshes.pop();
+for(let x=-4;x< -1.5;x+=.5)for(let z=-3;z< -1;z+=.5)face([[x,-3.17,z],[x+.5,-3.17,z],[x+.5,-3.17,z+.5],[x,-3.17,z+.5]],'#b8afa1');
+box(-4,-3.17,-3,.13,3.87,2,'#d5cfc3');box(-4,-3.17,-3,2.5,3.87,.13,'#ddd4c4');box(-4,0,-1,2.2,wh,.13,'#e5d8c3');
+// Ten treads descending leftwards from folding door, not an external annex.
+basementStairDetails();
+box(-1.58,0,-3,.13,wh,.35,'#e9dece');box(-1.58,0,-1.6,.13,wh,.6,'#e9dece');
+for(let i=0;i<5;i++)box(-1.57+(i%2)*.07,0,-2.65+i*.065,.08,1.95,.055,'#b49a78');
+// Fixed telephone beside stairs and entrance to basement.
+// Thin-legged telephone stand, preserving its approved footprint.
+box(-.38,.7,-.8,.45,.045,.5,'#63402c');box(-.36,.2,-.78,.41,.035,.46,'#704b32');for(let x of [-.36,.02])for(let z of [-.78,-.37])box(x,.015,z,.03,.69,.03,'#60412e');
+box(-.31,.75,-.72,.28,.045,.22,'#e0cfa9');box(-.3,.8,-.72,.26,.04,.065,'#e9ddbd');
+// Living-room sofa oriented along the hall, as in the supplied plan.
+box(1.25,0,1.75,.85,.38,2.1,'#c5ba8e');box(1.25,.38,1.75,.28,.55,2.1,'#ccc29b');box(1.3,.38,1.65,.8,.3,.18,'#a98d70');box(1.3,.38,3.8,.8,.3,.18,'#a98d70');for(let i=0;i<3;i++)box(1.56,.4,1.84+i*.62,.5,.08,.58,'#d2c9a4');
+// Round low table in front of sofa (polygonal approximation).
+const cx=2.8,cz=2.7,rad=.47;for(let i=0;i<24;i++){let a=i*Math.PI/12,b=(i+1)*Math.PI/12;face([[cx,.55,cz],[cx+rad*Math.cos(a),.55,cz+rad*Math.sin(a)],[cx+rad*Math.cos(b),.55,cz+rad*Math.sin(b)]],'#e0d2bd')}box(2.72,0,2.62,.16,.55,.16,'#93633a');
+// Cabinets on rear and right walls of living room; no invented dining set.
+box(1.2,0,-.2,2.55,.9,.45,'#7a4f30');photoBookcase();box(3.35,0,.8,.43,1.5,2.7,'#806444');for(let i=1;i<4;i++)box(3.3,i*.35,.83,.04,.04,2.6,'#c5a679');
+for(const x of [-2.8,1.8]){box(x,.85,4.39,1,.85,.04,'#eee7db');box(x+.08,.93,4.35,.84,.69,.04,'#b9cbd0')}
+}
+function cylinder(x,y,z,rx,rz,h,c,n=20){for(let i=0;i<n;i++){let a=i*2*Math.PI/n,b=(i+1)*2*Math.PI/n;let A=[x+rx*Math.cos(a),y,z+rz*Math.sin(a)],B=[x+rx*Math.cos(b),y,z+rz*Math.sin(b)];face([A,B,[B[0],y+h,B[2]],[A[0],y+h,A[2]]],c);face([[x,y+h,z],[A[0],y+h,A[2]],[B[0],y+h,B[2]]],c)}}
+function details(){
+// Additions only: approved walls, floors, openings and stair footprints are untouched.
+// Woodwork: recessed cabinet panels and small metal handles.
+for(let z=-.55;z<3;z+=.53){box(-3.185,.12,z,.018,.62,.47,'#aa7746');box(-3.16,.61,z+.35,.022,.035,.09,'#c2b59d')}
+for(let z=-.35;z<2.3;z+=.53){box(-3.435,1.4,z,.015,.53,.47,'#b17c46');box(-3.41,1.5,z+.36,.02,.08,.025,'#bfb5a1')}
+// Sink bowls, taps and cooktop rings.
+for(let z of [.31,.58])cylinder(-3.5,.98,z,.15,.1,.008,'#606c6b');cylinder(-3.44,.98,.92,.025,.025,.23,'#b9bfba');box(-3.5,1.18,.82,.08,.04,.16,'#c5cac6');
+for(let z of [1.85,2.12])for(let x of [-3.58,-3.34])cylinder(x,.992,z,.085,.085,.008,'#171b1a');
+// Sofa stitching, separate seat seams and terracotta cushions.
+for(let z of [2.45,3.07])box(1.56,.487,z,.49,.012,.014,'#a78d71');box(1.57,.54,1.9,.38,.28,.35,'#b97b4a');box(1.58,.54,3.35,.37,.27,.35,'#b29774');
+// Cabinet doors and shelving dishes.
+for(let x=1.28;x<3.6;x+=.6){box(x,.12,.257,.53,.65,.016,'#9b6c3d');cylinder(x+.43,.48,.29,.025,.025,.025,'#baae91')}
+for(let z=1;z<3.4;z+=.6)for(let y of [.32,.67,1.02]){cylinder(3.34,y,z,.12,.19,.035,'#e8dfcf')}
+// Upper staircase: open metal handrail with fine balusters.
+for(let i=0;i<10;i++)box(-.5,.16*i+.13,1.99-i*.25,.027,.82,.027,'#555b58');
+face([[-.51,1.01,2.08],[-.51,2.45,-.33],[-.51,2.49,-.33],[-.51,1.05,2.08]],'#656b68');
+// Basement tread nosings: grey stone finish and lighter risers.
+
+// Bathroom: cream vanity, framed mirror, oval basin and dispenser.
+box(1.45,.03,-2.88,1.1,.72,.5,'#e8dfcb');for(let x of [1.5,2]){box(x,.15,-2.365,.45,.52,.018,'#f0e8d8');box(x+.34,.52,-2.34,.025,.07,.025,'#a69a83')}
+box(1.41,.84,-2.91,1.18,.05,.61,'#f5eee1');cylinder(2,.9,-2.64,.27,.18,.009,'#d7d4c9');cylinder(2,.91,-2.64,.21,.13,.01,'#f5f0e6');cylinder(2,.92,-2.86,.024,.024,.18,'#b4bab5');
+box(1.4,1.09,-2.985,1.2,.04,.035,'#afa794');box(1.4,2.04,-2.985,1.2,.04,.035,'#afa794');box(1.4,1.09,-2.985,.04,.99,.035,'#afa794');box(2.56,1.09,-2.985,.04,.99,.035,'#afa794');
+cylinder(2.43,.91,-2.66,.043,.043,.17,'#e7d9bc');box(2.41,1.09,-2.66,.07,.025,.025,'#a4a39b');
+// Woven rug, without changing bathroom layout.
+for(let i=0;i<16;i++)box(1.62+i*.1,.057,-1.99,.098,.009,.45,['#a96e36','#c48b3c','#6f8179','#c48b3c'][Math.floor(i/4)]);
+// Garage ladder and green shelving, as visible in the supplied illustration.
+for(let x of [-2.4,-2.05])box(x,.05,-4.67,.035,1.9,.04,'#646962');for(let y=.2;y<1.9;y+=.27)box(-2.4,y,-4.67,.385,.035,.04,'#646962');
+for(let x of [-1.98,-1.72]){box(x,.02,-3.75,.035,.95,.5,'#3e7454')}for(let y of [.03,.5,.95])box(-1.98,y,-3.75,.3,.035,.5,'#49825b');
+// Door leaf swings outward; frame and entrance opening remain fixed.
+box(.51,.02,4.5,.09,1.98,.86,'#9a6536');box(.49,.16,4.6,.025,.65,.63,'#ac7843');box(.49,1.02,4.6,.025,.72,.63,'#ac7843');box(.455,.92,5.13,.06,.04,.16,'#b8b9a6');
+}
+
+function clipTile(poly,axis,edge,greater){let out=[];for(let i=0;i<poly.length;i++){let a=poly[i],b=poly[(i+1)%poly.length],ia=greater?a[axis]>=edge:a[axis]<=edge,ib=greater?b[axis]>=edge:b[axis]<=edge;if(ia)out.push(a);if(ia!==ib){let t=(edge-a[axis])/(b[axis]-a[axis]);out.push(a.map((v,k)=>v+(b[k]-v)*t))}}return out}
+function photoFloor(){
+// Same approved floor boundary and stairwell opening; only the tile finish changes.
+const rects=[[-1.5,4,-5,-3.1],[-4,4,-3.1,-3],[-1.5,4,-3,-1],[-4,4,-1,4.5]],q=Math.SQRT1_2;
+for(const r of rects){for(let i=-16;i<=16;i++)for(let j=-16;j<=16;j++){let side=.48,gap=.006;let poly=[[gap,gap],[side-gap,gap],[side-gap,side-gap],[gap,side-gap]].map(([a,b])=>{let u=i*side+a,v=j*side+b;return [(u-v)*q,.004,(u+v)*q]});for(let [axis,edge,gt] of [[0,r[0],true],[0,r[1],false],[2,r[2],true],[2,r[3],false]]){poly=clipTile(poly,axis,edge,gt);if(!poly.length)break}if(poly.length>=3){let shade=((i*17+j*11)%5+5)%5;face(poly,['#ad805a','#b28660','#ae825b','#b58a64','#b0845e'][shade])}}}
+}
+function rod(a,b,r,c,n=6){let d=norm(sub(b,a)),seed=Math.abs(d[1])>.85?[1,0,0]:[0,1,0],u=norm(cross(d,seed)),v=cross(d,u);for(let i=0;i<n;i++){let aa=i*2*Math.PI/n,bb=(i+1)*2*Math.PI/n;let off=t=>u.map((q,k)=>r*(q*Math.cos(t)+v[k]*Math.sin(t)));let x=off(aa),y=off(bb);face([a.map((q,k)=>q+x[k]),a.map((q,k)=>q+y[k]),b.map((q,k)=>q+y[k]),b.map((q,k)=>q+x[k])],c)}}
+function frameXY(x,y,z,w,h){box(x,y,z,w,h,.025,'#754b2e');box(x+.018,y+.018,z+.027,w-.036,h-.036,.008,'#c7ac71');box(x+.035,y+.035,z+.037,w-.07,h-.07,.008,'#d4c9ab');box(x+w*.3,y+h*.26,z+.047,w*.27,h*.35,.004,'#7f8e71')}
+function photoBookcase(){
+// Open upper shelving, photographs, books and small ornaments from the photo references.
+box(1.2,.9,-.2,2.55,1.13,.045,'#6c482f');for(let x of [1.2,2.03,2.84,3.69])box(x,.9,-.2,.045,1.17,.45,'#815735');for(let y of [.92,1.25,1.61,2.03])box(1.2,y,-.2,2.55,.035,.45,'#96683d');
+for(let i=0;i<12;i++){let x=1.32+i*.055;box(x,.95,-.02,.045,.2+(i%3)*.025,.15,['#596b69','#a48250','#b5a27a','#78523c'][i%4])}
+for(let i=0;i<7;i++)box(2.12+i*.07,.95,-.01,.06,.22,.15,['#777c6d','#5f6e6a','#ae9a6a'][i%3]);
+for(let x of [1.38,1.73,2.18])frameXY(x,1.3,.04,.19,.24);
+for(let x of [1.38,1.8,2.2,2.65,3.12]){cylinder(x,1.68,.04,.045,.045,.13,'#ccc8af',10);cylinder(x,1.8,.04,.03,.03,.06,'#e5dfc9',10)}
+// A closed display compartment is indicated by tinted panes, with its wooden frame intact.
+box(2.92,1.31,.23,.68,.6,.012,'#8b8c73');for(let y of [1.32,1.88])box(2.92,y,.25,.68,.025,.025,'#805532');
+}
+function photoBall(x,y,z,rx,ry,rz,c,n=8,m=4){for(let j=0;j<m;j++)for(let i=0;i<n;i++){let phi0=-Math.PI/2+j*Math.PI/m,phi1=-Math.PI/2+(j+1)*Math.PI/m,a=i*2*Math.PI/n,b=(i+1)*2*Math.PI/n;let at=(t,p)=>[x+rx*Math.cos(p)*Math.cos(t),y+ry*Math.sin(p),z+rz*Math.cos(p)*Math.sin(t)];face(j===0?[at(a,phi0),at(b,phi1),at(a,phi1)]:j===m-1?[at(a,phi0),at(b,phi0),at(a,phi1)]:[at(a,phi0),at(b,phi0),at(b,phi1),at(a,phi1)],c)}}
+function photoDetails(){
+// Terracotta step nosings and grout joints: staircase location and dimensions unchanged.
+for(let i=0;i<10;i++){let z=1.9-i*.25,y=(i+1)*.16;box(-1.45,y+.005,z+.22,.9,.015,.03,'#c18b60');for(let x of [-1.15,-.85])box(x,i*.16+.01,z+.249,.008,.145,.002,'#c4a17a')}
+// Slender iron handrail, dark rail posts and brass finials.
+rod([-.485,1.04,2.07],[-.485,2.48,-.32],.025,'#414b43',8);for(let i of [0,3,6,9]){let z=1.99-i*.25,y=.16*i;box(-.515,y+.12,z,.055,.87,.055,'#42483d');photoBall(-.488,y+1.04,z+.025,.045,.045,.045,'#b29b5d')}
+// Telephone dial, receiver, coiled lead and lower shelf box.
+for(let i=0;i<3;i++)for(let j=0;j<3;j++)box(-.24+i*.037,.799,-.61+j*.03,.022,.007,.017,'#a89b7e');
+for(let i=0;i<13;i++){let y=.71-i*.025,x=-.045+Math.sin(i*1.9)*.015;rod([x,y,-.365],[x+.01,y-.02,-.365],.005,'#b6a98d',4)}box(-.31,.24,-.72,.26,.17,.22,'#393e39');
+// A plant beside the foot of the rail, with no obstruction of the walking path.
+cylinder(-.43,.01,1.85,.12,.12,.22,'#98613e',12);for(let i=0;i<7;i++){let a=i*2.4;face([[-.43,.22,1.85],[-.43+.04*Math.cos(a),.78+(i%3)*.1,1.85+.11*Math.sin(a)],[-.39+.07*Math.cos(a),.3,1.85+.08*Math.sin(a)]],['#536242','#68734a','#788052'][i%3])}
+// Dried flower vase beside the sitting area.
+cylinder(1.02,.015,1.07,.12,.1,.32,'#b8a07a',12);for(let i=0;i<8;i++){let a=i*2.4,x=1.02+Math.cos(a)*.12,z=1.07+Math.sin(a)*.1;rod([1.02,.3,1.07],[x,.68,z],.008,'#81724d');photoBall(x,.72,z,.085,.085,.075,['#a89b72','#b0a17b','#958666'][i%3])}
+// Fine seams in the pale upholstered cushions.
+for(let z of [2.2,2.82,3.46])box(1.554,.5,z,.52,.008,.008,'#b4aa84');
+// Dark wooden window surrounds and light sheers on the already approved windows.
+for(let x of [-2.8,1.8]){for(let xx of [x-.025,x+.97])box(xx,.83,4.325,.035,.91,.035,'#775331');for(let y of [.83,1.7])box(x-.025,y,4.325,1.03,.035,.035,'#775331');for(let j=0;j<8;j++){let xx=x+.04+j*.12;box(xx,.93,4.31,.035,.73,.008,j%2?'#e9e6d4':'#dbddca')}}
+}
+
+function basementStairDetails(){
+// Threshold 0 is separate from the thirteen marble treads. No basement handrail.
+box(-1.5,0,-2.56,.18,.06,.88,'#d7dcd3');
+for(let i=1;i<=13;i++){
+let a=BASEMENT_PATH[i-1],b=BASEMENT_PATH[i],y=b[1],A,B,C,D;
+if(i>=3&&i<=5||i>=8&&i<=10){
+let first=i<=5,k=first?i-3:i-8,cx=-2.2,cz=first?-1.55:-1.23,angle=first?-Math.PI/2-k*Math.PI/6:Math.PI-k*Math.PI/6,end=angle-Math.PI/6;
+let at=(r,t)=>[cx+r*Math.cos(t),y,cz+r*Math.sin(t)];A=at(.13,angle);B=at(1.01,angle);C=at(1.01,end);D=at(.13,end);
+}else{let dx=b[0]-a[0],dz=b[2]-a[2],n=Math.hypot(dx,dz),nx=-dz/n*.44,nz=dx/n*.44;A=[a[0]+nx,y,a[2]+nz];B=[a[0]-nx,y,a[2]-nz];C=[b[0]-nx,y,b[2]-nz];D=[b[0]+nx,y,b[2]+nz];}
+face([A,B,C,D],i%2?'#aeb4ad':'#bac0b7');face([A,B,[B[0],a[1],B[2]],[A[0],a[1],A[2]]],'#dfe3d9');
+// Fine pale marble veins and tread edge, flush with the step surface.
+for(let t of [.3,.65]){let P=A.map((v,k)=>v+(D[k]-v)*t),Q=B.map((v,k)=>v+(C[k]-v)*t);P[1]=Q[1]=y+.002;face([P,Q,[Q[0],y+.002,Q[2]+.004],[P[0],y+.002,P[2]+.004]],'#d1d8ce')}
+rod([A[0],y+.008,A[2]],[B[0],y+.008,B[2]],.008,'#e1e6dc');
+if(i>=8){let top=Math.min(-.025,y+2.1);for(let pair of [[A,D],[B,C]])face([[pair[0][0],y-.05,pair[0][2]],[pair[1][0],y-.05,pair[1][2]],[pair[1][0],top,pair[1][2]],[pair[0][0],top,pair[0][2]]],'#d7d0c3');}
+}
+box(-1.3,-3.29,-.95,4.2,.12,3.9,'#aaa79b');
+box(-1.3,-3.17,2.83,4.2,2.3,.12,'#d9d3c5');box(2.78,-3.17,-.55,.12,2.3,3.5,'#d9d3c5');
+}
+function extraPhotoDetails(){
+// Kitchen finishes within the approved cabinet positions.
+for(let z=-.35;z<2.65;z+=.53)for(let y=1.45;y<1.96;y+=.055)box(-3.415,y,z,.012,.018,.47,'#b9854b');
+for(let z=-.55;z<2.9;z+=.53)for(let y=.17;y<.7;y+=.065)box(-3.16,y,z,.012,.016,.46,'#b27d47');
+// White square backsplash, dark worktop and small terracotta decorative squares.
+for(let z=-.64;z<3.1;z+=.2)for(let y=.94;y<1.34;y+=.2){box(-3.79,y,z,.018,.192,.192,'#e6e3d7');if(Math.round(z*10+y*10)%11===0)box(-3.765,y+.06,z+.06,.01,.065,.065,'#a27452')}
+box(-3.87,.88,-.65,.75,.045,3.8,'#8d8c82');
+// Oven and extractor hood; same kitchen footprint.
+box(-3.17,.1,1.65,.025,.59,.61,'#252b2a');box(-3.14,.58,1.71,.04,.025,.48,'#aaa89b');box(-3.43,1.32,1.64,.34,.12,.66,'#353b38');
+// Slatted wooden fridge front at the end of the existing kitchen run.
+box(-3.85,0,3.18,.65,1.95,.57,'#a57541');for(let y of [.08,.72])box(-3.183,y,3.22,.02,.6,.47,'#b8854b');for(let y of [.69,1.35])box(-3.155,y,3.25,.035,.04,.38,'#504a3b');
+// Microwave and a few copper utensils on the countertop.
+box(-3.65,.94,2.55,.43,.28,.43,'#cbc9b9');box(-3.205,.98,2.59,.015,.2,.25,'#303735');cylinder(-3.45,2.02,.1,.09,.09,.12,'#8a6547',12);cylinder(-3.45,2.02,1.1,.08,.08,.13,'#9d7554',12);
+// Compact kitchen table, cloth and wooden chairs within the kitchen, clear of the central route.
+box(-2.93,.71,2.68,.9,.05,1.03,'#b7ab8b');for(let x of [-2.88,-2.13])for(let z of [2.74,3.57])box(x,.02,z,.04,.69,.04,'#815b36');
+for(let i=0;i<5;i++)for(let j=0;j<6;j++){let x=-2.86+i*.16,z=2.76+j*.15;face([[x,.768,z],[x+.025,.768,z-.025],[x+.05,.768,z],[x+.025,.768,z+.025]],['#986452','#6f7d65','#9a875d'][(i+j)%3])}
+for(let z of [2.28,3.9]){box(-2.67,.42,z,.44,.045,.4,'#aa7a43');for(let x of [-2.64,-2.28])box(x,.025,z+.05,.035,.42,.035,'#805a35');box(-2.67,.47,z+(z<3?0:.35),.44,.5,.035,'#a27540')}
+// Beige couch cushions, a patterned small cushion and red items visible in the supplied dated photograph.
+box(1.57,.52,2.01,.35,.25,.35,'#c4b690');for(let i=0;i<4;i++)box(1.58+i*.07,.776,2.04,.025,.006,.24,'#a77758');
+box(1.64,.5,2.65,.29,.53,.36,'#ae4637');box(1.65,.82,2.66,.26,.055,.34,'#b94e3a');rod([1.68,1.04,2.72],[1.85,1.04,2.86],.008,'#34392d');face([[1.59,.51,3.17],[1.99,.51,3.09],[2,.52,3.56],[1.61,.51,3.52]],'#ab4235');
+// Small domestic objects stay separate from forensic markers.
+box(1.74,.5,3.64,.25,.025,.18,'#c8c3ab');box(1.76,.53,3.65,.18,.04,.09,'#72834b');
+}
+function garageFinishes(){
+// White tiles replace terracotta only inside the garage.
+for(let x=-4;x< -1.5;x+=.3)for(let z=-5;z< -3.1;z+=.3){let xx=Math.min(x+.294,-1.5),zz=Math.min(z+.294,-3.1);face([[x,.005,z],[xx,.005,z],[xx,.005,zz],[x,.005,zz]],'#eeeede')}
+// Shutter on the kitchen-facing side (x-), not on the rear wall (z-).
+box(-3.85,0,-4.81,.065,1.98,1.57,'#aeb3ab');for(let y=.06;y<1.94;y+=.105)box(-3.777,y,-4.78,.014,.075,1.51,'#bfc3ba');
+box(-3.758,.88,-4.1,.025,.05,.18,'#626c64');for(let z of [-4.84,-3.25])box(-3.76,0,z,.04,2.02,.04,'#7e8b81');
+}
+function exteriorBuild(){meshes.length=0;
+// Exterior reference: pale rose plaster, dark weathered clay roofs and sparse winter garden.
+const plaster='#e6d1cb',trim='#d7d8cc',brick='#a26d5b',dark='#292d2b';
+box(-7,-.32,-7.5,14,.18,18,'#667b4b');
+for(let x=-6.8;x<6.8;x+=.7)for(let z=-7.3;z<10.3;z+=.7)face([[x,-.13,z],[x+.68,-.13,z],[x+.68,-.13,z+.68],[x,-.13,z+.68]],['#6b8050','#708451','#657b49'][Math.abs(Math.round(x*10+z*10))%3]);
+box(-6.5,-.11,-6.8,1.7,.06,16.8,'#7c8078');
+box(-4,0,-5,8,5.1,9.5,plaster);meshes.pop();
+// Terracotta paving wraps the porch and side elevation.
+box(-4.25,-.02,4.45,8.5,.12,1.9,'#a67460');box(4,-.02,-4.9,.8,.1,11.2,'#ae7d68');
+for(let x=-4.2;x<4.2;x+=.28)for(let z=4.5;z<6.3;z+=.28)face([[x,.105,z],[x+.265,.105,z],[x+.265,.105,z+.265],[x,.105,z+.265]],'#b5846d');
+// Curved brick walk from the pedestrian gate to the entrance.
+for(let i=0;i<42;i++){let t=i/42,u=(i+1)/42;const center=v=>[-.18+1.1*Math.sin(Math.PI*v)*Math.sin(Math.PI*v),-.065,6.15+4.2*v];let A=center(t),B=center(u);let dx=B[0]-A[0],dz=B[2]-A[2],len=Math.hypot(dx,dz),nx=dz/len*.56,nz=-dx/len*.56;face([[A[0]-nx,A[1],A[2]-nz],[A[0]+nx,A[1],A[2]+nz],[B[0]+nx,B[1],B[2]+nz],[B[0]-nx,B[1],B[2]-nz]],i%2?'#b9826c':'#b07863');}
+// Four pale square porch columns, with terracotta planters at their bases.
+for(let x of [-3.8,-1.3,1.3,3.8]){box(x,.1,5.85,.18,2.5,.18,trim);cylinder(x+.32,.12,6.02,.14,.14,.42,'#a96753',10);cylinder(x+.32,.54,6.02,.17,.17,.07,'#ad735d',10);}
+const lerp=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+function roofPanel(a,b,c,d,rows,cols){const palette=['#655b50','#716457','#79695c','#625b52','#826f5e'];for(let j=0;j<rows;j++)for(let k=0;k<cols;k++){let v=j/rows,w=(j+1)/rows,t=k/cols,u=(k+1)/cols;let L=lerp(a,d,v),R=lerp(b,c,v),L2=lerp(a,d,w),R2=lerp(b,c,w);let A=lerp(L,R,t),B=lerp(L,R,u),C=lerp(L2,R2,u),D=lerp(L2,R2,t);face([A,B,C,D],palette[(j*7+k*3)%palette.length]);rod(A,B,.009,'#4e4942',4);}}
+// Low wraparound canopy and dark gutter, below the first-floor balcony.
+roofPanel([-4.4,2.74,4.2],[4.4,2.74,4.2],[4.4,2.22,6.35],[-4.4,2.22,6.35],12,32);
+roofPanel([4,2.74,-5.1],[4,2.74,4.2],[4.65,2.22,5],[4.65,2.22,-5.5],8,30);
+box(-4.43,2.18,6.3,8.9,.09,.07,'#42463f');box(4.6,2.18,-5.5,.07,.09,11.85,'#42463f');
+// Solid light balcony parapet, open terracotta deck and three closed dark shutters.
+box(-2.8,2.76,4.5,5.6,.14,1.05,trim);box(-2.65,2.91,4.5,5.3,.025,.88,'#a77863');
+box(-2.8,2.9,5.45,5.6,.64,.14,trim);box(-2.8,2.9,4.5,.14,.64,1.09,trim);box(2.66,2.9,4.5,.14,.64,1.09,trim);
+box(-2.84,3.53,5.42,5.68,.04,.2,'#b3b7ad');
+for(let x of [-2.5,0,2.5]){box(x-.43,3.05,4.515,.86,1.68,.045,dark);box(x-.015,3.07,4.57,.03,1.64,.025,'#43473d');for(let y=3.12;y<4.7;y+=.11)box(x-.4,y,4.566,.8,.025,.015,'#343a32');}
+// Main hipped tiled roof, low weathered ridge and dark eaves.
+const A=[-4.4,5.15,-5.4],B=[4.4,5.15,-5.4],C=[4.4,5.15,4.9],D=[-4.4,5.15,4.9],R=[0,6.65,-3.5],S=[0,6.65,3];
+roofPanel(A,D,S,R,12,34);roofPanel(B,C,S,R,12,34);
+// Triangular hips subdivided into rows and tiles.
+for(const [a,b,top] of [[A,B,R],[D,C,S]])for(let j=0;j<12;j++){const lo=j/12,hi=(j+1)/12;roofPanel(lerp(a,top,lo),lerp(b,top,lo),lerp(b,top,hi),lerp(a,top,hi),1,28-j*2);}
+for(const [a,b] of [[A,B],[B,C],[C,D],[D,A]])rod(a,b,.045,'#42463f',6);
+for(const [a,b] of [[A,R],[B,R],[D,S],[C,S],[R,S]])rod(a,b,.065,'#82715f',8);
+// Brick chimney on the near/right roof slope, with a pitched tile cap.
+box(2.35,5.45,2.45,.56,.91,.56,brick);box(2.27,5.43,2.37,.72,.09,.72,'#b4b7ac');box(2.39,6.36,2.49,.48,.21,.48,'#30342e');
+face([[2.19,6.56,2.3],[3.07,6.56,2.3],[2.63,6.85,2.3]],'#b77b5e');roofPanel([2.19,6.56,2.3],[2.19,6.56,3.16],[2.63,6.85,3.16],[2.63,6.85,2.3],3,5);roofPanel([3.07,6.56,2.3],[3.07,6.56,3.16],[2.63,6.85,3.16],[2.63,6.85,2.3],3,5);
+// Blank upper side wall, brick vertical pier and broad ground-floor windows.
+box(4.015,0,2.85,.07,5.13,.56,brick);for(let y=.1;y<5.1;y+=.13)box(4.09,y,2.85,.012,.012,.56,'#bc8d77');
+for(let x of [-2.55,2.05]){box(x-.56,.65,4.52,1.12,1.35,.035,dark);box(x-.03,.67,4.57,.035,1.31,.025,'#9d9d8e');}
+box(-.5,.12,4.52,1,2.05,.05,'#34382f');box(.29,1.05,4.59,.05,.08,.03,'#b7b8a3');
+for(let z of [-3.1,.1]){box(4.02,.65,z,.04,1.52,1.8,'#333c37');for(let k=1;k<3;k++)box(4.065,.68,z+k*.6,.025,1.46,.035,'#b6b4a5');box(4.065,1.4,z,.025,.035,1.8,'#aaa99b');}
+for(let x of [-4.08,4.08]){box(x,0,4.37,.065,5.15,.065,'#454941');box(x,.08,4.37,.12,.15,.15,'#51534a');}
+// White perimeter walls, dark pedestrian gate with broad flat canopy.
+box(-7,0,-7.5,14,1.15,.16,'#d2d1c5');box(-7,0,-7.5,.16,1.15,18,'#d2d1c5');box(6.84,0,-7.5,.16,1.15,18,'#d2d1c5');
+box(-7,0,10.3,6.15,1.15,.16,'#d2d1c5');box(.85,0,10.3,6.15,1.15,.16,'#d2d1c5');
+for(let x of [-.98,.8])box(x,0,10.18,.25,1.8,.45,'#d2d1c5');box(-1.16,1.79,10.03,2.39,.13,.85,'#b9bdb1');
+for(let x=-.7;x<.8;x+=.12)box(x,0,10.36,.025,1.55,.035,'#343d36');for(let y of [.18,1.35])box(-.7,y,10.36,1.5,.035,.04,'#343d36');
+// Sparse winter trees: bare branches rather than dense summer crowns.
+for(const [x,z,h] of [[5.7,6.8,3.2],[5.7,1.6,3.6],[-3.4,8,3.1],[-5.6,-2.8,3.8]]){rod([x,0,z],[x+.06,h,z],.065,'#6d6958',7);for(let j=0;j<7;j++){const ang=j*2.4,y=h*.43+j*.18,dx=Math.cos(ang)*(.55+j*.045),dz=Math.sin(ang)*(.55+j*.045);const a=[x,y,z],b=[x+dx,y+.7,z+dz];rod(a,b,.025,'#74705e',5);rod(b,[b[0]+dx*.35,b[1]+.45,b[2]+dz*.3],.012,'#7f7967',4);}}
+// Low rounded shrubs against the side and rear boundary.
+for(const [x,z] of [[-5.6,-5.6],[5.6,-4.8],[-4.8,4.9]]){cylinder(x,0,z,.12,.12,.55,'#68604c',7);for(let k=0;k<9;k++){let a=k*Math.PI*2/9,b=(k+1)*Math.PI*2/9;face([[x+.5*Math.cos(a),.45,z+.5*Math.sin(a)],[x+.5*Math.cos(b),.45,z+.5*Math.sin(b)],[x,.98,z]],['#67764a','#7d8956','#71814c'][k%3]);}}
+}
+function enclosedHallDetails(){
+// Fill beneath the approved upper treads; it is a wall, not open shelving.
+for(let i=1;i<10;i++)box(-1.45,0,1.9-i*.25,.9,i*.16,.25,'#e1d9c8');
+face([[-.542,0,2.15],[-.542,1.6,-.35],[-.542,0,-.35]],'#e1d9c8');
+// Wall behind telephone, return to staircase and right jamb: vestibule beyond.
+const h=firstPerson||raise?2.35:.85;
+box(-.54,0,-.9,.74,h,.12,'#e5dccb');box(-.54,0,-.9,.12,h,.55,'#e5dccb');
+box(1.13,0,-1.36,.14,h,.58,'#e5dccb');
+for(let x of [.2,1.08])box(x,0,-.79,.065,2.08,.08,'#8d5e35');box(.2,2.02,-.79,.945,.07,.08,'#8d5e35');
+// Small frames belong to the new telephone wall, as visible in the photographs.
+frameXY(-.39,1.12,-.766,.26,.28);frameXY(-.38,1.49,-.766,.25,.3);box(.02,1.05,-.765,.11,.07,.018,'#4b4c3d');
+}
+function rebuild(){if(outside)exteriorBuild();else{build();details();photoDetails();extraPhotoDetails();enclosedHallDetails()}}
+const sub=(a,b)=>a.map((v,i)=>v-b[i]),dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),norm=a=>{let l=Math.hypot(...a);return a.map(x=>x/l)},cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+let eye,right,up,forward;
+function camera(){if(firstPerson){eye=fpEye.slice();let dir=norm(sub(fpLook,eye)),a=Math.atan2(dir[0],dir[2])+fpYawOffset,el=Math.asin(dir[1])+fpPitchOffset;el=Math.max(-1.05,Math.min(.12,el));forward=[Math.cos(el)*Math.sin(a),Math.sin(el),Math.cos(el)*Math.cos(a)]}else{eye=[target[0]+dist*Math.cos(pitch)*Math.sin(yaw),target[1]+dist*Math.sin(pitch),target[2]+dist*Math.cos(pitch)*Math.cos(yaw)];forward=norm(sub(target,eye))}right=norm(cross(forward,[0,1,0]));up=cross(right,forward)}
+function focal(){return firstPerson?Math.min(W*.68,H*.95)*fpZoom:Math.min(W,H)*1.22}
+function project(v){let p=sub(v,eye),z=dot(p,forward),f=focal();return {x:W/2+dot(p,right)*f/z,y:H/2-dot(p,up)*f/z,z}}
+function clipFace(v){let out=[],near=.07;for(let i=0;i<v.length;i++){let a=v[i],b=v[(i+1)%v.length],za=dot(sub(a,eye),forward),zb=dot(sub(b,eye),forward);if(za>=near)out.push(a);if((za>=near)!==(zb>=near)){let t=(near-za)/(zb-za);out.push(a.map((n,k)=>n+(b[k]-n)*t))}}return out}
+const LOWER_CEILING=[];for(let x=-4;x<4;x+=.5)for(let z=-1;z<4.5;z+=.5)LOWER_CEILING.push({v:[[x,-.015,z],[x+.5,-.015,z],[x+.5,-.015,z+.5],[x,-.015,z+.5]],c:'#e5dfd2'});
+function shade(hex,k){let n=parseInt(hex.slice(1),16);return `rgb(${Math.min(255,(n>>16)*k)},${Math.min(255,((n>>8)&255)*k)},${Math.min(255,(n&255)*k)})`}
+function draw(){camera();ctx.clearRect(0,0,W,H);if(firstPerson){ctx.fillStyle='#f4f0e8';ctx.fillRect(0,0,W,H)}let list=[];let visibleMeshes=firstPerson&&eye[1]<-.03?meshes.filter(m=>m.v.some(v=>v[1]<-.1)).concat(LOWER_CEILING):meshes;for(let m of visibleMeshes){let clipped=clipFace(m.v);if(clipped.length<3)continue;let v=clipped.map(project);list.push({m,v,z:v.reduce((s,p)=>s+p.z,0)/v.length})}list.sort((a,b)=>b.z-a.z);for(let {m,v} of list){let n=norm(cross(sub(m.v[1],m.v[0]),sub(m.v[2],m.v[0])));let light=.78+.22*Math.abs(dot(n,norm([-.5,1,.6])));ctx.beginPath();v.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=shade(m.c,light);ctx.fill();ctx.strokeStyle='#715a3b18';ctx.lineWidth=.4;ctx.stroke()}
+routeOccluders=list.map(({v})=>({v,minX:Math.min(...v.map(p=>p.x)),maxX:Math.max(...v.map(p=>p.x)),minY:Math.min(...v.map(p=>p.y)),maxY:Math.max(...v.map(p=>p.y))}));drawProofs();drawRoute();for(let el of labels.children){let p=project(JSON.parse(el.dataset.pos));el.style.left=p.x+'px';el.style.top=p.y+'px';el.style.display=p.z>.2&&p.x>8&&p.x<W-8&&p.y>8&&p.y<H-8?'':'none'}positionPopup()}
+function resize(){W=stage.clientWidth;H=stage.clientHeight;let d=Math.min(devicePixelRatio||1,2);canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);draw()}
+function positionPopup(){
+ if(popup.hidden)return;
+ const gap=12,w=popup.offsetWidth,h=popup.offsetHeight;
+ const clamp=(v,max)=>Math.max(gap,Math.min(max-gap,v));
+ let candidates=[[gap,gap],[W-w-gap,gap],[gap,H-h-gap],[W-w-gap,H-h-gap]];
+ let anchor=null;
+ if(!firstPerson){const pos=activeEvidence!==null?EVIDENCE[activeEvidence].pos:selected!==null?points[mode][selected]:null;if(pos){anchor=project(pos);if(anchor.z>.07)candidates.unshift([anchor.x+20,anchor.y-h/2],[anchor.x-w-20,anchor.y-h/2]);}}
+ // Prefer an upper corner in first person, leaving the stairs and forward view clear.
+ const protectedPoints=[];const start=firstPerson?routeProgress:0,end=firstPerson?Math.min(1,start+.23):1;
+ for(let i=0;i<=45;i++){const p=routePoint(start+(end-start)*i/45);if(routeSampleVisible(p))protectedPoints.push(project(p));}
+ const scored=candidates.map(([x,y],i)=>{x=clamp(x,W-w);y=clamp(y,H-h);let score=0;
+  for(const p of protectedPoints)if(p.x>x-20&&p.x<x+w+20&&p.y>y-20&&p.y<y+h+20)score+=100;
+  if(firstPerson){const cx=W/2,cy=H*.58;const overlap=Math.max(0,Math.min(x+w,cx+W*.15)-Math.max(x,cx-W*.15))*Math.max(0,Math.min(y+h,H)-Math.max(y,H*.38));score+=overlap*.04;score+=y*.02;}
+  else if(anchor&&anchor.z>.07)score+=Math.hypot(x+w/2-anchor.x,y+h/2-anchor.y)*.015;
+  return {x,y,score:score+i*.001};});
+ scored.sort((a,b)=>a.score-b.score);let best=scored[0];popup.style.left=best.x+'px';popup.style.top=best.y+'px';
+}
+function openLabel(i){selected=i;activeEvidence=null;step=i;popup.hidden=false;let d=DATA[mode][i];$('#popstep').textContent=(i+1)+mode+'. '+(mode==='a'?'La tesi del primo procedimento':'L’ipotesi della seconda inchiesta');$('#poptitle').textContent=d[0];$('#poptext').textContent=d[1];renderEvidence();updatePins()}
+function openEvidence(i){stop();activeEvidence=i;selected=null;let e=EVIDENCE[i];currentRoom=i===5?'bagno':[6,8,9].includes(i)?'scala':'interno';popup.hidden=false;$('#popstep').textContent='';$('#poptitle').textContent=e.title;$('#poptext').textContent=e.text;evidenceVisible=true;$('#evidenceToggle').setAttribute('aria-pressed',true);$('#evidenceToggle').textContent='Nascondi indicatori di prova';if(e.pos&&!reference){go(e.pos,11,.75)}renderEvidence();updatePins()}
+function renderEvidence(){let el=$('.evidence-controls');el.replaceChildren();EVIDENCE.forEach((e,i)=>{let b=document.createElement('button');b.textContent=e.title;b.className=activeEvidence===i?'active':'';b.setAttribute('aria-pressed',i===activeEvidence);b.onclick=()=>openEvidence(i);el.append(b)})}
+function addPin(pos,text,name,fn,cls=''){let el=document.createElement('button');el.className='pin '+cls;el.dataset.pos=JSON.stringify(pos);el.textContent=text;el.setAttribute('aria-label',name);el.onclick=fn;labels.append(el)}
+function updatePins(){labels.replaceChildren();if(reference){draw();return}if(outside){addPin([0,1,4.7],'→','Entra in casa',()=>setExterior(false));draw();return}
+if(firstPerson){$('#progress').textContent=(step+1)+mode+' / 4'+mode;draw();return}if(evidenceVisible&&!playing&&activeEvidence!==null&&EVIDENCE[activeEvidence].pos){let e=EVIDENCE[activeEvidence];addPin(e.pos,'+',e.title,()=>openEvidence(activeEvidence),'evidence-pin active')}
+else if(!playing){points[mode].forEach((pos,i)=>{addPin([pos[0],pos[1]+.15,pos[2]],(i+1)+mode,DATA[mode][i][0],()=>{stop();tourStep(i)},selected===i?'active':'')})}
+$('#progress').textContent=(step+1)+mode+' / 4'+mode;draw()}
+function go(pos,d=7,p=.35){exitFirstPerson();desired={target:[...pos],dist:d,pitch:p,yaw:yaw};animate()}
+let animating=false;function animate(){if(animating)return;animating=true;function frame(){if(!desired){animating=false;return}let diff=0;target=target.map((v,i)=>{diff+=Math.abs(v-desired.target[i]);return v+(desired.target[i]-v)*.12});for(const k of ['dist','pitch']){if(k==='dist'){diff+=Math.abs(dist-desired.dist);dist+=(desired.dist-dist)*.12}else{diff+=Math.abs(pitch-desired.pitch);pitch+=(desired.pitch-pitch)*.12}}draw();if(diff<.015){desired=null;animating=false}else requestAnimationFrame(frame)}requestAnimationFrame(frame)}
+function stop(){clearInterval(timer);timer=null;playing=false;routeMotion=null;motionSerial++;$('#play').textContent='Avvia la ricostruzione 3d'}
+function home(){$('#pathsToggle').setAttribute('aria-pressed',true);$('#pathsToggle').textContent='Nascondi percorsi';exitFirstPerson();activeEvidence=null;routeVisible=true;if(outside){go([0,1,1],29,.62);return}stop();selected=null;popup.hidden=true;go([0,0,-.2],18,.66);$('#rooms').value='';updatePins()}
+function setMode(m){$('#pathsToggle').setAttribute('aria-pressed',true);$('#pathsToggle').textContent='Nascondi percorsi';exitFirstPerson();activeEvidence=null;routeVisible=true;reference=false;showReference();if(outside)setExterior(false);stop();mode=m;step=0;selected=null;popup.hidden=true;$('#a').setAttribute('aria-pressed',m==='a');$('#b').setAttribute('aria-pressed',m==='b');updatePins()}
+$('#a').onclick=()=>setMode('a');$('#b').onclick=()=>setMode('b');$('.close').onclick=()=>{selected=null;activeEvidence=null;popup.hidden=true;renderEvidence();updatePins()};$('#home').onclick=home;
+roomList.forEach(([name],i)=>{let o=document.createElement('option');o.value=i;o.textContent=name;$('#rooms').append(o)});$('#rooms').onchange=e=>{if(e.target.value==='')return;$('#pathsToggle').setAttribute('aria-pressed',true);$('#pathsToggle').textContent='Nascondi percorsi';if(outside)setExterior(false);routeVisible=true;activeEvidence=null;currentRoom=(+e.target.value===3?'bagno':+e.target.value>=5?'scala':'interno');stop();reference=false;showReference();selected=null;popup.hidden=true;go(roomList[+e.target.value][1],+e.target.value===4?7:6,+e.target.value===4?.8:.28)};
+$('#in').onclick=()=>{if(firstPerson){fpZoom=Math.min(1.5,fpZoom*1.1);draw();return}stop();desired=null;dist=Math.max(3,dist*.8);draw()};$('#out').onclick=()=>{if(firstPerson){fpZoom=Math.max(.75,fpZoom/1.1);draw();return}stop();desired=null;dist=Math.min(32,dist*1.2);draw()};$('#walls').onclick=()=>{raise=!raise;$('#walls').setAttribute('aria-pressed',raise);$('#walls').textContent=raise?'Abbassa le pareti':'Alza le pareti';rebuild();draw()};function showReference(){reference=false;labels.style.display='';popup.hidden=selected===null&&activeEvidence===null;}
+function setExterior(value){exitFirstPerson();stop();routeVisible=true;activeEvidence=null;outside=value;$('#pathsToggle').disabled=outside;$('#pathsToggle').setAttribute('aria-pressed',true);$('#pathsToggle').textContent='Nascondi percorsi';selected=null;popup.hidden=true;reference=false;currentRoom=outside?'esterno':'interno';$('#exterior').setAttribute('aria-pressed',outside);$('#exterior').textContent=outside?'Torna all’interno':'Esterno 3D';$('#walls').disabled=outside;$('#rooms').disabled=outside;rebuild();target=outside?[0,1,1]:[0,0,-.2];dist=outside?29:18;pitch=outside?.62:.66;yaw=-.58;desired=null;showReference();updatePins();draw()}
+$('#exterior').onclick=()=>setExterior(!outside);
+function enterFirstPerson(){if(!firstPerson){firstPerson=true;fpYawOffset=fpPitchOffset=0;fpZoom=1;rebuild();labels.replaceChildren()}$('#walls').disabled=true;$('#walls').textContent='Pareti della casa';}
+function exitFirstPerson(){if(!firstPerson)return;firstPerson=false;fpYawOffset=fpPitchOffset=0;$('#walls').disabled=outside;$('#walls').textContent=raise?'Abbassa le pareti':'Alza le pareti';target=[0,0,-.2];dist=18;pitch=.66;yaw=-.58;rebuild()}
+let fpHeading=0,fpTilt=-8*Math.PI/180;
+function followCamera(t){let entering=!firstPerson;enterFirstPerson();let p=routePoint(t),ahead=routePoint(Math.min(1,t+.055)),dx=ahead[0]-p[0],dz=ahead[2]-p[2];if(Math.hypot(dx,dz)<.02){let a=ROUTE[ROUTE.length-2],b=ROUTE[ROUTE.length-1];dx=b[0]-a[0];dz=b[2]-a[2]}
+let heading=Math.atan2(dx,dz);if(entering)fpHeading=heading;else{let delta=Math.atan2(Math.sin(heading-fpHeading),Math.cos(heading-fpHeading));fpHeading+=delta*.18}
+let horizontal=Math.hypot(ahead[0]-p[0],ahead[2]-p[2]),slope=horizontal>.015?Math.atan2(ahead[1]-p[1],horizontal):0;
+let wanted=-8*Math.PI/180;if(t>=stepProgress[2]&&t<=.96){wanted=-Math.min(55,Math.max(48,20+Math.abs(slope)*180/Math.PI*.85))*Math.PI/180;}if(t>.96)wanted=-15*Math.PI/180;
+fpTilt=entering?wanted:fpTilt+(wanted-fpTilt)*.12;
+fpEye=[p[0],p[1]+1.5,p[2]];fpLook=[fpEye[0]+Math.sin(fpHeading)*2,fpEye[1]+Math.tan(fpTilt)*2,fpEye[2]+Math.cos(fpHeading)*2];fpPitchOffset=0;desired=null;}
+function drawIndoorRoute(){ctx.save();const segments=routeSegments(routeProgress,Math.min(1,routeProgress+.196));
+for(const [colour,width] of [['#ffffffc9',7],['#059ade',3.5]]){ctx.strokeStyle=colour;ctx.lineWidth=width;ctx.setLineDash([7,4]);ctx.beginPath();for(const [a,b] of segments){ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}ctx.stroke()}
+ctx.setLineDash([]);for(const offset of [.045,.09,.145])routeArrow(Math.min(.997,routeProgress+offset),11);ctx.restore()}
+$('#pathsToggle').onclick=()=>{routeVisible=!routeVisible;$('#pathsToggle').setAttribute('aria-pressed',routeVisible);$('#pathsToggle').textContent=routeVisible?'Nascondi percorsi':'Mostra percorsi';draw()};
+function moveOnRoute(from,to,duration,onEnd){const token=++motionSerial;routeMotion={from,to};let start=null;function frame(ts){if(token!==motionSerial)return;if(start===null)start=ts;let u=Math.min(1,(ts-start)/duration),smooth=u*u*(3-2*u);routeProgress=from+(to-from)*smooth;followCamera(routeProgress);draw();if(u<1)requestAnimationFrame(frame);else{routeMotion=null;if(onEnd)onEnd()}}requestAnimationFrame(frame)}
+function prepareTour(){fpTilt=-8*Math.PI/180;$('#pathsToggle').setAttribute('aria-pressed',true);$('#pathsToggle').textContent='Nascondi percorsi';fpYawOffset=fpPitchOffset=0;if(outside)setExterior(false);reference=false;showReference();routeVisible=true;activeEvidence=null;evidenceVisible=false;$('#evidenceToggle').setAttribute('aria-pressed',false);$('#evidenceToggle').textContent='Mostra elementi di prova';}
+function tourStep(i){prepareTour();let next=Math.max(0,Math.min(3,i)),to=stepProgress[next];openLabel(next);moveOnRoute(routeProgress,to,Math.max(700,Math.abs(to-routeProgress)*14000));}
+$('#prev').onclick=()=>{stop();tourStep(step-1)};$('#next').onclick=()=>{stop();tourStep(step+1)};
+function autoLeg(i){if(!playing)return;openLabel(i);updatePins();if(i===3){timer=setTimeout(()=>{stop();updatePins()},4000);return}timer=setTimeout(()=>{if(!playing)return;moveOnRoute(stepProgress[i],stepProgress[i+1],Math.max(3500,(stepProgress[i+1]-stepProgress[i])*24000),()=>autoLeg(i+1))},4000)}
+$('#play').onclick=()=>{if(playing){stop();updatePins();return}stop();prepareTour();playing=true;routeProgress=0;followCamera(0);$('#play').textContent='Ferma la ricostruzione 3d';stage.scrollIntoView({block:'start',behavior:'smooth'});autoLeg(0)};
+$('#evidenceToggle').onclick=()=>{stop();evidenceVisible=!evidenceVisible;activeEvidence=null;$('#evidenceToggle').setAttribute('aria-pressed',evidenceVisible);$('#evidenceToggle').textContent=evidenceVisible?'Nascondi indicatori di prova':'Mostra elementi di prova';renderEvidence();updatePins()};
+let pointers=new Map(),drag=null,pinch=0;canvas.onpointerdown=e=>{stop();updatePins();desired=null;pointers.set(e.pointerId,[e.clientX,e.clientY]);canvas.setPointerCapture(e.pointerId);drag=[e.clientX,e.clientY,firstPerson?fpYawOffset:yaw,firstPerson?fpPitchOffset:pitch];if(pointers.size===2){let a=[...pointers.values()];pinch=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}};canvas.onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){let a=[...pointers.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);dist=Math.min(32,Math.max(3,dist*pinch/d));pinch=d}else if(drag){if(firstPerson){fpYawOffset=drag[2]-(e.clientX-drag[0])*.004;fpPitchOffset=Math.max(-.08,Math.min(.08,drag[3]+(e.clientY-drag[1])*.001));draw();return}yaw=drag[2]-(e.clientX-drag[0])*.008;pitch=Math.min(1.4,Math.max(.12,drag[3]+(e.clientY-drag[1])*.005))}draw()};canvas.onpointerup=canvas.onpointercancel=e=>{pointers.delete(e.pointerId);drag=null};canvas.onwheel=e=>{e.preventDefault();if(firstPerson){fpZoom=Math.max(.75,Math.min(1.5,fpZoom*Math.exp(-e.deltaY*.0005)));draw();return}stop();desired=null;dist=Math.max(3,Math.min(32,dist*Math.exp(e.deltaY*.001)));draw()};canvas.addEventListener('wheel',e=>e.preventDefault(),{passive:false});canvas.onkeydown=e=>{if(firstPerson){if(e.key==='ArrowLeft')fpYawOffset+=.12;else if(e.key==='ArrowRight')fpYawOffset-=.12;else if(e.key==='ArrowUp'||e.key==='ArrowDown'){stop();routeProgress=Math.max(0,Math.min(1,routeProgress+(e.key==='ArrowUp'?.012:-.012)));followCamera(routeProgress)}else return;e.preventDefault();draw();return}if(e.key==='ArrowLeft')yaw-=.12;else if(e.key==='ArrowRight')yaw+=.12;else if(e.key==='ArrowUp')dist=Math.max(3,dist-.6);else if(e.key==='ArrowDown')dist=Math.min(32,dist+.6);else return;e.preventDefault();draw()};window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});rebuild();renderEvidence();updatePins();resize();
+</script></html>
